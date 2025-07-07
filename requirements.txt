@@ -1,0 +1,8 @@
+# KBreaker for Excel - Requirements
+# ===================================
+
+# Windows COM interface for Excel automation
+pywin32>=306
+
+# Optional: Enhanced logging and utilities
+colorama>=0.4.6

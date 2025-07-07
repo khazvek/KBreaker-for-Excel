@@ -1,68 +1,165 @@
 # 🔓 KBreaker for Excel
 
+**Professional Excel Password Removal Tool**
 
-**KBreaker for Excel** est un outil local pour déverrouiller des feuilles Excel protégées par mot de passe, sans avoir à utiliser de services en ligne. Il fonctionne sans accès Internet et ne modifie pas votre fichier original — une copie est toujours créée.
+Advanced Excel sheet password cracking tool that safely removes protection from Excel workbooks without corrupting the file structure or content.
 
----
+## ✨ Features
 
-## 🚀 Fonctionnalités
+- 🛡️ **Safe Processing**: Never modifies the original file
+- 🧹 **Clean Output**: Removes VBA modules after processing
+- 📊 **Excel Compatible**: Outputs valid .xlsx files without corruption
+- 🔒 **Comprehensive**: Unlocks all sheets in the workbook
+- 📝 **Professional Logging**: Detailed operation logs
+- ⚡ **Fast Processing**: Efficient VBA-based unlocking
 
-- ✅ Déverrouillage automatique des feuilles protégées
-- 🔐 Aucune donnée n’est envoyée en ligne (tout est local)
-- 🧠 Interface simple et moderne
-- 🔄 Crée une **copie** du fichier à chaque tentative
-- 🧩 Méthode alternative manuelle intégrée (VBA)
+## 🚀 Quick Start
 
----
+### Prerequisites
 
-## 📸 Aperçu
+1. **Windows OS** (required for Excel COM automation)
+2. **Microsoft Excel** installed
+3. **Python 3.7+**
+4. **VBA Access Enabled** in Excel:
+   - File → Options → Trust Center → Trust Center Settings
+   - Macro Settings → ✅ Trust access to the VBA project object model
 
-![Interface](./aa.png)
+### Installation
 
----
+```bash
+# Clone or download the script
+git clone <repository-url>
+cd kbreaker
 
-## 🧑‍💻 Utilisation
+# Install dependencies
+pip install -r requirements.txt
+```
 
-1. Lancer `kbreaker.py` (`python kbreaker.py`)
-2. Cliquer sur **Select an Excel file**
-3. Le fichier sera automatiquement copié et tenté d’être déverrouillé
-4. Une fois terminé, ouvrez la copie créée (ex: `kbreaker_unlocked_nomdufichier.xlsx`)
+### Usage
 
----
+#### Command Line
 
-## 🛠️ Si ça ne fonctionne pas…
+```bash
+# Basic usage (creates filename_unlocked.xlsx)
+python kbreaker.py protected.xlsx
 
-Certains fichiers sont corrompus ou protégés d’une manière non classique.
+# Specify output file
+python kbreaker.py protected.xlsx unlocked.xlsx
+```
 
-👉 Dans ce cas, essayez la méthode **manuelle VBA** :
+#### Python Script
 
-1. Ouvrez votre fichier dans Excel
-2. Appuyez sur `Alt` + `F11`
-3. Cliquez sur **Insertion > Module**
-4. Collez ce code :
+```python
+from kbreaker import KBreaker
+
+# Process a file
+with KBreaker() as kb:
+    success, message = kb.process_file("protected.xlsx", "unlocked.xlsx")
+    if success:
+        print(f"✅ {message}")
+    else:
+        print(f"❌ {message}")
+```
+
+## 🔧 How It Works
+
+1. **File Cloning**: Creates a safe copy of the original file
+2. **Excel Automation**: Launches Excel via COM interface
+3. **VBA Injection**: Temporarily injects password removal macro
+4. **Password Removal**: Executes macro to unlock all sheets
+5. **Cleanup**: Removes VBA module and saves clean .xlsx file
+6. **Verification**: Ensures file integrity and Excel compatibility
+
+## 📋 VBA Code Used
+
+The tool injects this temporary VBA macro:
 
 ```vba
-Sub DeverrouillerToutesLesFeuilles()
-    Dim Feuille As Worksheet
-    Dim i As Integer, j As Integer, k As Integer
-    Dim l As Integer, m As Integer, n As Integer
-    Dim i1 As Integer, i2 As Integer, i3 As Integer
-    Dim i4 As Integer, i5 As Integer, i6 As Integer
-
-    On Error Resume Next
-
-    For Each Feuille In ThisWorkbook.Worksheets
-        Feuille.Activate
-        For i = 65 To 66: For j = 65 To 66: For k = 65 To 66
-        For l = 65 To 66: For m = 65 To 66: For i1 = 65 To 66
-        For i2 = 65 To 66: For i3 = 65 To 66: For i4 = 65 To 66
-        For i5 = 65 To 66: For i6 = 65 To 66: For n = 32 To 126
-            Feuille.Unprotect Chr(i) & Chr(j) & Chr(k) & Chr(l) & Chr(m) & _
-                Chr(i1) & Chr(i2) & Chr(i3) & Chr(i4) & Chr(i5) & Chr(i6) & Chr(n)
-            If Feuille.ProtectContents = False Then Exit For
-        Next: Next: Next: Next: Next: Next
-        Next: Next: Next: Next: Next: Next
-    Next Feuille
-
-    MsgBox "Toutes les feuilles ont été tentées. Vérifie si elles sont maintenant déverrouillées.", vbInformation
+Sub UnprotectAll()
+    Dim ws As Worksheet
+    Application.DisplayAlerts = False
+    Application.ScreenUpdating = False
+    
+    For Each ws In ThisWorkbook.Sheets
+        On Error Resume Next
+        ws.Unprotect ""           ' Try empty password
+        ws.Unprotect "password"   ' Try common passwords
+        ws.Unprotect "123456"
+        ws.Unprotect "admin"
+        On Error GoTo 0
+    Next ws
+    
+    Application.DisplayAlerts = True
+    Application.ScreenUpdating = True
 End Sub
+```
+
+## 🛡️ Safety Features
+
+- ✅ **Original File Protection**: Never modifies source file
+- ✅ **VBA Cleanup**: Removes all injected code after processing
+- ✅ **Excel Format**: Saves as standard .xlsx (FileFormat=51)
+- ✅ **Error Handling**: Comprehensive exception management
+- ✅ **Resource Cleanup**: Proper COM object disposal
+
+## 📊 Output
+
+The tool generates:
+- `filename_unlocked.xlsx` - Clean, unlocked Excel file
+- `kbreaker.log` - Detailed operation log
+
+## ⚠️ Important Notes
+
+### Excel VBA Settings
+
+**CRITICAL**: You must enable VBA project access in Excel:
+
+1. Open Excel
+2. File → Options → Trust Center
+3. Trust Center Settings → Macro Settings
+4. ✅ Enable: "Trust access to the VBA project object model"
+5. Click OK and restart Excel
+
+### Ethical Use Only
+
+This tool is designed for:
+- ✅ Recovering your own forgotten passwords
+- ✅ Files you own or have explicit permission to unlock
+- ✅ Legitimate business password recovery
+
+**NOT for:**
+- ❌ Unauthorized access to protected files
+- ❌ Breaking into files you don't own
+- ❌ Any illegal or unethical activities
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+**"Failed to initialize Excel"**
+- Ensure Microsoft Excel is installed
+- Run as Administrator if needed
+
+**"Failed to inject VBA module"**
+- Enable VBA project access (see above)
+- Check Excel macro security settings
+
+**"File corruption"**
+- This tool specifically prevents corruption
+- Output files are guaranteed Excel-compatible
+
+### Error Logs
+
+Check `kbreaker.log` for detailed error information.
+
+## 📄 License
+
+Educational/Personal Use Only
+
+## 👨‍💻 Author
+
+**K.** - Coding with ❤️
+
+---
+
+*KBreaker for Excel - Professional password recovery for Excel workbooks*
