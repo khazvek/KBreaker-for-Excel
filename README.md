@@ -1,7 +1,5 @@
 # 🔓 KBreaker for Excel
 
-![KBreaker Screenshot](./aa.png)
-
 **KBreaker for Excel** is a local desktop tool that unlocks password-protected worksheets in `.xlsx` files — without requiring the actual password.
 
 It works by injecting a short VBA macro into a copy of the original file, executing it via Excel, and exporting a clean, unprotected `.xlsx` file.
