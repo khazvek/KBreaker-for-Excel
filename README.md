@@ -1,6 +1,5 @@
 # 🔓 KBreaker for Excel
 
-![KBreaker Screenshot](./aa.png)
 
 **KBreaker for Excel** est un outil local pour déverrouiller des feuilles Excel protégées par mot de passe, sans avoir à utiliser de services en ligne. Il fonctionne sans accès Internet et ne modifie pas votre fichier original — une copie est toujours créée.
 
